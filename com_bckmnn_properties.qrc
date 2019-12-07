@@ -1,8 +1,13 @@
 <RCC>
     <qresource prefix="/com/bckmnn/properties">
         <file>qmldir</file>
+        <file>qml/PropertyPanel_1_0.qml</file>
+        <file>qml/IntPropertyEditor.qml</file>
+        <file>qml/RangePropertyEditor.qml</file>
+        <file>qml/RangeSliderPropertyEditor.qml</file>
     </qresource>
     <qresource prefix="/qt-project.org/imports/com/bckmnn/properties">
         <file>qmldir</file>
+        <file>qml/PropertyPanel_1_0.qml</file>
     </qresource>
 </RCC>
