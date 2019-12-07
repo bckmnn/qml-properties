@@ -1,0 +1,18 @@
+{
+  "name": "com.bckmnn.properties",
+  "author": {
+    "name": "Stefan Beckmann",
+    "email": "stfn@bckmnn.com"
+  },
+  "repository": {
+    "type": "GIT",
+    "url": "https://github.com/bckmnn/qml-properties.git"
+  },
+  "version": {
+    "label": "0.0.1"
+  },
+  "dependencies": [
+  ],
+  "license": "MIT",
+  "priFilename": "com_bckmnn_properties.pri"
+}

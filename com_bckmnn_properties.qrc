@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/com/bckmnn/properties">
+        <file>qmldir</file>
+    </qresource>
+    <qresource prefix="/qt-project.org/imports/com/bckmnn/properties">
+        <file>qmldir</file>
+    </qresource>
+</RCC>
