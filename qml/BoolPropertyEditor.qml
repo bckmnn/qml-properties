@@ -13,22 +13,20 @@ Rectangle{
         Text {
             width: 100-10
             id: label
-            text: modelData.label + "\n" + "("+modelData.from +"-"+modelData.to+")"
+            text: modelData.label
             height: parent.height
             verticalAlignment: Text.AlignVCenter
         }
-        Slider{
+        CheckBox{
             id: control
-            from: modelData.from
-            to: modelData.to
-            value: modelData.value
-            stepSize: modelData.stepSize
-            snapMode: stepSize>0 ? Slider.SnapAlways:Slider.NoSnap
-            onMoved: {
-                modelData.value = valueAt(position)
+            checked: modelData.value
+            onCheckedChanged: {
+                if(checked !== modelData.value){
+                    modelData.value = checked
+                }
+
             }
             height: parent.height-parent.padding*2
-            width: root.width - (100+5)
         }
     }
 }

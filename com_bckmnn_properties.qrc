@@ -5,6 +5,8 @@
         <file>qml/IntPropertyEditor.qml</file>
         <file>qml/RangePropertyEditor.qml</file>
         <file>qml/RangeSliderPropertyEditor.qml</file>
+        <file>qml/StringPropertyEditor.qml</file>
+        <file>qml/BoolPropertyEditor.qml</file>
     </qresource>
     <qresource prefix="/qt-project.org/imports/com/bckmnn/properties">
         <file>qmldir</file>

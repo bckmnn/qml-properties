@@ -7,7 +7,8 @@ RESOURCES += \
 
 HEADERS += \
     $$PWD/src/propertiesattachedtype.h \
-    $$PWD/src/propertymanager.h
+    $$PWD/src/propertymanager.h \
+    $$PWD/src/propertytypes.h
 
 SOURCES += \
     $$PWD/src/properties_autoregister.cpp \
