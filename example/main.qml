@@ -17,7 +17,7 @@ Window {
                 label: "show Border"
                 value: false
             },
-            IntProperty{
+            DoubleProperty{
                 id: propXpos
                 label: "xpos"
                 value: 50

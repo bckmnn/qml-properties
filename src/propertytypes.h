@@ -79,6 +79,31 @@ private:
     bool m_multiline = false;
 };
 
+class DoubleProperty : public BaseProperty
+{
+    Q_OBJECT
+    Q_PROPERTY(double value READ doubleValue WRITE setDoubleValue NOTIFY valueChanged)
+
+public:
+    explicit DoubleProperty(QObject *parent = nullptr) :
+        BaseProperty(parent)
+    {
+        m_delegate_qml = "DoublePropertyEditor.qml";
+    }
+
+signals:
+
+private:
+    double doubleValue(){
+        return m_value.toDouble();
+    }
+    void setDoubleValue(double value){
+        m_value = QVariant::fromValue(value);
+        emit valueChanged();
+    }
+};
+
+
 class IntProperty : public BaseProperty
 {
     Q_OBJECT

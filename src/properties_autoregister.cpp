@@ -13,6 +13,7 @@ static void registerTypes()
     qmlRegisterType<PropertiesAttachedType>();
     qmlRegisterType<BaseProperty>(PROPERTIES_NS, 1, 0, "BaseProperty");
     qmlRegisterType<BoolProperty>(PROPERTIES_NS, 1, 0, "BoolProperty");
+    qmlRegisterType<DoubleProperty>(PROPERTIES_NS, 1, 0, "DoubleProperty");
     qmlRegisterType<IntProperty>(PROPERTIES_NS, 1, 0, "IntProperty");
     qmlRegisterType<RangeProperty>(PROPERTIES_NS, 1, 0, "RangeProperty");
     qmlRegisterType<StringProperty>(PROPERTIES_NS, 1, 0, "StringProperty");
