@@ -22,7 +22,7 @@ Rectangle{
             editable: true
             from: validator.bottom
             to: validator.top
-            stepSize: modelData.stepSize
+            stepSize: modelData.stepSize !== 0 ? modelData.stepSize : 1
             validator: IntValidator {
                 locale: control.locale.name
             }
