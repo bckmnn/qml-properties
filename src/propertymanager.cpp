@@ -20,7 +20,6 @@ void PropertyManager::edit(QQuickItem *editable)
     m_editable = editable;
     PropertiesAttachedType * p = PropertyManager::getAttachedType(m_editable);
     if(p != nullptr){
-        qDebug() << p->propCount();
         emit propsChanged();
     }
 }
