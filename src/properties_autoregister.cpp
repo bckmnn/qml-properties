@@ -2,6 +2,7 @@
 #include <QtQml>
 
 #include "propertymanager.h"
+#include "propertysettings.h"
 
 
 namespace com { namespace bckmnn { namespace properties {
@@ -17,6 +18,7 @@ static void registerTypes()
     qmlRegisterType<IntProperty>(PROPERTIES_NS, 1, 0, "IntProperty");
     qmlRegisterType<RangeProperty>(PROPERTIES_NS, 1, 0, "RangeProperty");
     qmlRegisterType<StringProperty>(PROPERTIES_NS, 1, 0, "StringProperty");
+    qmlRegisterType<PropertySettings>(PROPERTIES_NS, 1, 0, "PropertySettings");
     qmlRegisterUncreatableType<Properties>(PROPERTIES_NS, 1, 0, "Properties", "attached type");
     qmlRegisterSingletonType<PropertyManager>(PROPERTIES_NS, 1, 0, "PropertyManager", PropertyManager::PropertyManager_Provider);
 }
