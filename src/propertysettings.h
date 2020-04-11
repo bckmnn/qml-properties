@@ -21,6 +21,7 @@ public:
     Q_INVOKABLE void save();
 
     void addSettingChild(PropertySettings* child);
+    void removeSettingChild(PropertySettings* child);
     void setSettingParent(PropertySettings* parent);
 
 signals:
@@ -31,12 +32,17 @@ protected:
         static QMap<QObject*,PropertySettings*> registry;
         static PropertySettings* rootPropertySetting;
         static void saveProperties();
+        static void loadProperties();
 
         QJsonObject serialize();
+        void deserialize(QJsonObject json);
 
 private:
         PropertySettings* m_settingParent = nullptr;
         QList<PropertySettings*> m_settingChildren = QList<PropertySettings*>();
+
+        QMap<QString, QMetaProperty> _mapProperties();
+
         static void organizePropertySettings();
 
         static QJsonArray qvlistToJsonArray(const QVariantList l);

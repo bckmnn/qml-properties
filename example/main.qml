@@ -12,10 +12,13 @@ Window {
 
     PropertySettings{
         id: mySettings
+        readonly property string readOnly: "test"
         property color bgColor: "#f0f0f0";
         property string windowTitle: "QML-Example"
         property var list: ["1.qml","2.qml","3.qml"]
         property var object: {"1":"hallo","2":"das","3":"ist"}
+        property int myInt: 10
+        property point coord: Qt.point(12,30)
     }
 
     ListView{
@@ -27,6 +30,21 @@ Window {
                 id:loader
                 width: parent.width
                 source: mySettings.list[index]
+            }
+        }
+    }
+    Rectangle{
+        anchors.top: parent.top
+        anchors.topMargin: mySettings.coord.y
+        anchors.rightMargin: mySettings.coord.x
+        anchors.right: parent.right
+        width: 100
+        height: 100
+        color: "purple"
+        MouseArea{
+            anchors.fill: parent
+            onClicked: {
+                mySettings.load()
             }
         }
     }

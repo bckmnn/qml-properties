@@ -10,4 +10,9 @@ Rectangle {
     width: parent.width
     height: 100
     color: props.bgColor
+    Rectangle{
+        height: parent.height/2
+        anchors.centerIn: parent
+        width: parent.width/100.0*props.h
+    }
 }
