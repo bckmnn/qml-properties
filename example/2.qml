@@ -2,10 +2,13 @@ import QtQuick 2.12
 import com.bckmnn.properties 1.0
 
 Rectangle {
+    id:root
     PropertySettings{
         id: props
         property real h: 12.320
         property color bgColor: "green";
+        listIndex: index !== undefined ? index : -1
+        list: root.parent.ListView ? root.parent.ListView.view : undefined
     }
     width: parent.width
     height: 100

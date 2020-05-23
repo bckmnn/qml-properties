@@ -175,10 +175,13 @@ QJsonValue PropertySettings::variantToJsonValue(const QVariant v) {
         return QJsonValue(listmodel);
     } else if (v.type() == QVariant::Type::UserType) {
         QString typeName = QString(v.typeName());
+        QJsonObject userType;
+        userType.insert("@type", typeName);
         if (typeName == "QJSValue") {
             QJSValue jsvalue = v.value<QJSValue>();
             QVariant jsv = jsvalue.toVariant();
-            return variantToJsonValue(jsv);
+            userType.insert("value", variantToJsonValue(jsv));
+            return QJsonValue(userType);
         }else{
             qDebug() << "skipped serialization of" << typeName << v;
         }
@@ -197,6 +200,98 @@ QJsonObject PropertySettings::variantmapToJsonObject(
         o.insert(i.key(), variantToJsonValue(i.value()));
     }
     return o;
+}
+
+QVariant PropertySettings::jsonValueToVariant(const QJsonValue v, QVariant currentValue)
+{
+    QVariant::Type targetType = currentValue.type();
+    if (targetType == QVariant::Type::Bool) {
+        return v.toVariant();
+    } else if (targetType == QVariant::Type::Int) {
+        return v.toVariant();
+    } else if (targetType == QVariant::Type::Double) {
+        return v.toVariant();
+    } else if (targetType == QVariant::Type::String) {
+        return v.toVariant();
+    } else if (targetType == QVariant::Type::Url) {
+        // TODO: make paths relative to sg path
+        qDebug() << ":: QUrl needs to be made relative to sg path";
+        return v.toVariant();
+    } else if (targetType == QVariant::Type::Color) {
+        return v.toVariant();
+    } else if (targetType == QVariant::Type::PointF) {
+        QPointF p;
+        QJsonObject o = v.toObject();
+        if (o.value("@type").toString("") == "QPointF") {
+            p.setX(o.value("x").toDouble());
+            p.setY(o.value("y").toDouble());
+            return QVariant(p);
+        }
+    } else if (targetType == QVariant::Type::RectF) {
+        QRectF r;
+        QJsonObject o = v.toObject();
+        if (o.value("@type").toString("") == "QRectF") {
+            r.setX(o.value("x").toDouble());
+            r.setY(o.value("y").toDouble());
+            r.setWidth(o.value("w").toDouble());
+            r.setHeight(o.value("h").toDouble());
+            return QVariant(r);
+        }
+    } else if (int(targetType) == QMetaType::Type::QObjectStar){
+        if(currentValue.canConvert<QAbstractListModel *>()){
+            //TODO: better would be returning a QVariantMap and doing the list update elsewhere?
+            QAbstractListModel *m = currentValue.value<QAbstractListModel *>();
+            auto roles = m->roleNames();
+            QJsonObject o = v.toObject();
+            QJsonArray a = o.value("»entries").toArray();
+            int pos = 0;
+            currentValue.clear();
+            for (int idx = 0; idx < a.count(); idx++){
+                QJsonValue jv = a.at(idx);
+                QJsonObject jo = jv.toObject();
+                if(pos <= m->rowCount()){
+                    m->insertRow(m->rowCount());
+                }
+                for (auto it = roles.constBegin(); it != roles.constEnd(); ++it) {
+                    if(jo.contains(it.value())){
+                        m->setData(m->index(pos), jo.value(it.value()).toVariant(), it.key());
+                    }
+                }
+                pos = pos + 1;
+            }
+            if(m->rowCount() > pos){
+                qDebug() << m->rowCount() << pos;
+                qDebug() << "removing stuff";
+                for(int i = pos; i < m->rowCount();i++ ){
+                    bool success = m->removeRow(pos);
+                    qDebug() << success;
+                }
+            }
+            m->layoutChanged();
+        }
+    } else if (targetType == QVariant::Type::UserType){
+
+            QJsonObject o = v.toObject();
+            if (o.value("@type").toString("") == "QJSValue") {
+                QVariant jsvalue = o.value("value").toVariant();
+                return jsvalue;
+            }
+
+    }
+    return QVariant();
+}
+
+QVariantList PropertySettings::jsonArrayToVariantList(const QJsonArray a)
+{
+    QVariantList l;
+    qDebug() << a;
+    foreach(QJsonValue v, a){
+        qDebug() << v;
+        QVariant qv = v.toVariant();
+        l << qv;
+    }
+    qDebug() << l;
+    return l;
 }
 
 QJsonObject PropertySettings::serialize() {
@@ -246,41 +341,13 @@ void PropertySettings::deserialize(QJsonObject json) {
         } else {
             if (propMap.contains(key) && propMap.value(key).isWritable()) {
                 QVariant currentValue = propMap.value(key).read(this);
-                if (currentValue.canConvert<QString>()) {
-                    propMap.value(key).write(this, json.value(key).toVariant());
-                } else if (currentValue.canConvert<QPointF>()) {
-                    QPointF p;
-                    QJsonObject o = json.value(key).toObject();
-                    if (o.value("@type").toString("") == "QPointF") {
-                        p.setX(o.value("x").toDouble());
-                        p.setY(o.value("y").toDouble());
-                        propMap.value(key).write(this, QVariant(p));
-                    } else {
-                        qWarning() << ":: property" << propMap.value(key).name()
-                                   << "not restored";
-                    }
-                } else {
-                    QVariant v = currentValue.value<QVariant>();
-                    if (v.type() == QVariant::Type::UserType) {
-                        QString typeName = QString(v.typeName());
-                        if (typeName == "QJSValue") {
-                            QJSValue jsv = v.value<QJSValue>();
-                            v = jsv.toVariant();
-                            if (v.canConvert<QVariantList>()) {
-                                propMap.value(key).write(this, json.value(key).toVariant());
-                            } else if (v.canConvert<QVariantMap>()) {
-                                propMap.value(key).write(this, json.value(key).toVariant());
-                            } else {
-                                qWarning() << ":: property" << propMap.value(key).name()
-                                           << "QJSValue of type" << v.typeName()
-                                           << "was not restored";
-                            }
-                        }
-                    } else {
-                        qWarning() << ":: property" << propMap.value(key).name()
-                                   << "of type" << currentValue.typeName()
-                                   << "was not restored";
-                    }
+                QJsonValue jv = json.value(key);
+                QVariant restoredVariant = jsonValueToVariant(jv, currentValue);
+                if(restoredVariant.isValid()){
+                    propMap.value(key).write(this,restoredVariant);
+                }else{
+                    qWarning() << ":: property" << propMap.value(key).name()
+                               << "not restored.";
                 }
             }
         }

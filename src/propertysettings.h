@@ -65,6 +65,9 @@ private:
         static QJsonValue variantToJsonValue(const QVariant v);
         static QJsonObject variantmapToJsonObject(const QMap<QString, QVariant> m);
 
+        static QVariant jsonValueToVariant(const QJsonValue v, QVariant currentValue);
+        static QVariantList jsonArrayToVariantList(const QJsonArray a);
+
 // --- interfaces ---
     // QQmlParserStatus interface
 

@@ -7,8 +7,8 @@ Rectangle {
         id: props
         property int w: 10
         property color bgColor: "yellow";
-        listIndex: index != undefined ? index : -1
-        list: root.ListView ? root.ListView.view : undefined
+        listIndex: index !== undefined ? index : -1
+        list: root.parent.ListView ? root.parent.ListView.view : undefined
     }
     width: parent.width
     height: 100
